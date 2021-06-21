@@ -38,11 +38,37 @@ export default {
         // https://go.nuxtjs.dev/axios
         '@nuxtjs/axios',
         // https://go.nuxtjs.dev/pwa
-        '@nuxtjs/pwa'
+        '@nuxtjs/pwa',
+        'nuxt-i18n'
     ],
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {},
+
+    i18n: {
+        detectBrowserLanguage: {
+            useCookie: true,
+            cookieKey: 'mgg-lang',
+            onlyOnRoot: true
+        },
+        locales: [{
+            code: 'en',
+            iso: 'en-US',
+            file: 'en-US.js',
+        }, {
+            code: 'de',
+            iso: 'de-DE',
+            file: 'de-DE.js',
+        }, {
+            code: 'fr',
+            iso: 'fr-FR',
+            file: 'fr-FR.js',
+        }, {
+            code: 'nl',
+            iso: 'nl-NL',
+            file: 'nl-NL.js',
+        }]
+    },
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa
     pwa: {
