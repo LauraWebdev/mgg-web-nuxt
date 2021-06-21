@@ -20,6 +20,7 @@ module.exports = {
         "vue/html-self-closing": "off",
         "vue/attributes-order": "off",
         "vue/singleline-html-element-content-newline": "off",
+        "vue/mustache-interpolation-spacing": "off",
         "vue/no-v-html": "off",
         "indent": "off",
         "semi": [1, "always"],
