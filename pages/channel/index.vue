@@ -10,7 +10,7 @@
         <div class="page-centered page-channelList">
             <div class="page-wrapper">
                 <ChannelList>
-                    <ChannelItem v-for="channel in channels" v-bind:key="channel.id" v-bind="channel"></ChannelItem>
+                    <ChannelItem v-for="channel in channels" :key="channel.id" v-bind="channel"></ChannelItem>
                 </ChannelList>
             </div>
         </div>
@@ -32,24 +32,26 @@
             ChannelList,
             ChannelItem,
         },
+        async asyncData ({ params, $http }) {
+            try {
+                const api = new MGGApi();
+
+                const channels = await api.getAllChannels();
+
+                return { channels };
+            } catch (error) {
+                const channels = [];
+
+                return { channels };
+            }
+        },
         data: function () {
             return {
                 apiRef: null,
                 channels: [],
             }
         },
-        async asyncData ({ params, $http }) {
-                try {
-                    const api = new MGGApi();
-
-                    const channels = await api.getAllChannels();
-
-                    return { channels };
-                } catch (error) {
-                    console.error(error);
-                }
-        },
-    }
+    };
 </script>
 
 <style lang="less" scoped>

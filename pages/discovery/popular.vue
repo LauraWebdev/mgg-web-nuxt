@@ -2,59 +2,58 @@
     <div class="page-centered">
         <div class="page-wrapper">
             <GameList>
-                <GameItem v-for="game in popularGames" v-bind:key="game.id" v-bind="game"></GameItem>
+                <GameItem v-for="game in popularGames" :key="game.id" v-bind="game"></GameItem>
             </GameList>
         </div>
 
         <div class="page-wrapper actions">
-            <button class="button button-filled" :disabled="page < 1" v-on:click="previousPage()">{{ $t('index.previousPage') }}</button>
-            <button class="button button-filled" :disabled="popularGames.length < 11" v-on:click="nextPage()">{{ $t('index.nextPage') }}</button>
+            <button class="button button-filled" :disabled="page < 1" @click="previousPage()">{{ $t('index.previousPage') }}</button>
+            <button class="button button-filled" :disabled="popularGames.length < 11" @click="nextPage()">{{ $t('index.nextPage') }}</button>
         </div>
     </div>
 </template>
 
 <script>
-    import MGGApi from '../../modules/api';
+    import MGGApi from '@/modules/api';
 
     import GameList from '@/components/Game/GameList';
     import GameItem from '@/components/Game/GameItem';
 
     export default {
         name: 'DiscoveryNewest',
-        metaInfo: {
+        meta: {
             title: 'Most popular games',
         },
         components: {
             GameList,
             GameItem,
         },
-        data: function() {
+        data: function () {
             return {
                 apiRef: null,
                 popularGames: [],
                 page: 0,
-            }
+            };
         },
-        created: function() {
+        created: function () {
             this.$data.apiRef = new MGGApi();
         },
-        mounted: function() {
+        mounted: function () {
             this.fetchPopularGames();
         },
         methods: {
-            fetchPopularGames: async function() {
+            fetchPopularGames: async function () {
                 this.$data.popularGames = [];
                 try {
                     this.$data.popularGames = await this.$data.apiRef.getDiscoveryGames('popular', this.$data.page);
-                } catch(error) {
-                    console.error(error);
+                } catch (error) {
                 }
             },
-            nextPage: async function() {
+            nextPage: function () {
                 this.$data.page++;
                 this.fetchPopularGames();
             },
-            previousPage: async function() {
+            previousPage: function () {
                 this.$data.page--;
                 this.fetchPopularGames();
             }

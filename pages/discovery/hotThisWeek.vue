@@ -2,64 +2,63 @@
     <div class="page-centered">
         <div class="page-wrapper">
             <GameList>
-                <GameItem v-for="game in hotGames" v-bind:key="game.id" v-bind="game"></GameItem>
+                <GameItem v-for="game in hotGames" :key="game.id" v-bind="game"></GameItem>
             </GameList>
         </div>
 
         <div class="page-wrapper actions">
-            <button class="button button-filled" :disabled="page < 1" v-on:click="previousPage()">{{ $t('index.previousPage') }}</button>
-            <button class="button button-filled" :disabled="hotGames.length < 11" v-on:click="nextPage()">{{ $t('index.nextPage') }}</button>
+            <button class="button button-filled" :disabled="page < 1" @click="previousPage()">{{ $t('index.previousPage') }}</button>
+            <button class="button button-filled" :disabled="hotGames.length < 11" @click="nextPage()">{{ $t('index.nextPage') }}</button>
         </div>
     </div>
 </template>
 
 <script>
-    import MGGApi from '../../modules/api';
+    import MGGApi from '@/modules/api';
 
     import GameList from '@/components/Game/GameList';
     import GameItem from '@/components/Game/GameItem';
 
     export default {
         name: 'DiscoveryHotThisWeek',
-        metaInfo: {
+        meta: {
             title: 'Hot this week',
         },
         components: {
             GameList,
             GameItem,
         },
-        data: function() {
+        data: function () {
             return {
                 apiRef: null,
                 hotGames: [],
                 page: 0,
-            }
+            };
         },
-        created: function() {
+        created: function () {
             this.$data.apiRef = new MGGApi();
         },
-        mounted: function() {
+        mounted: function () {
             this.fetchHotThisWeekGames();
         },
         methods: {
-            fetchHotThisWeekGames: async function() {
+            fetchHotThisWeekGames: async function () {
                 this.$data.hotGames = [];
                 try {
                     this.$data.hotGames = await this.$data.apiRef.getDiscoveryGames('hotThisWeek', this.$data.page);
-                } catch(error) {
-                    console.error(error);
+                } catch (error) {
                 }
             },
-            nextPage: async function() {
+            nextPage: function () {
                 this.$data.page++;
                 this.fetchHotThisWeekGames();
             },
-            previousPage: async function() {
+            previousPage: function () {
                 this.$data.page--;
                 this.fetchHotThisWeekGames();
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>

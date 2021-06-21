@@ -2,64 +2,63 @@
     <div class="page-centered">
         <div class="page-wrapper">
             <GameList>
-                <GameItem v-for="game in randomGames" v-bind:key="game.id" v-bind="game"></GameItem>
+                <GameItem v-for="game in randomGames" :key="game.id" v-bind="game"></GameItem>
             </GameList>
         </div>
 
         <div class="page-wrapper actions">
-            <button class="button button-filled" :disabled="page < 1" v-on:click="previousPage()">{{ $t('index.previousPage') }}</button>
-            <button class="button button-filled" :disabled="randomGames.length < 11" v-on:click="nextPage()">{{ $t('index.nextPage') }}</button>
+            <button class="button button-filled" :disabled="page < 1" @click="previousPage()">{{ $t('index.previousPage') }}</button>
+            <button class="button button-filled" :disabled="randomGames.length < 11" @click="nextPage()">{{ $t('index.nextPage') }}</button>
         </div>
     </div>
 </template>
 
 <script>
-    import MGGApi from '../../modules/api';
+    import MGGApi from '@/modules/api';
 
     import GameList from '@/components/Game/GameList';
     import GameItem from '@/components/Game/GameItem';
 
     export default {
         name: 'DiscoveryRandom',
-        metaInfo: {
+        meta: {
             title: 'Random',
         },
         components: {
             GameList,
             GameItem,
         },
-        data: function() {
+        data: function () {
             return {
                 apiRef: null,
                 randomGames: [],
                 page: 0,
-            }
+            };
         },
-        created: function() {
+        created: function () {
             this.$data.apiRef = new MGGApi();
         },
-        mounted: function() {
+        mounted: function () {
             this.fetchRandomGames();
         },
         methods: {
-            fetchRandomGames: async function() {
+            fetchRandomGames: async function () {
                 this.$data.randomGames = [];
                 try {
                     this.$data.randomGames = await this.$data.apiRef.getDiscoveryGames('random', this.$data.page);
-                } catch(error) {
-                    console.error(error);
+                } catch (error) {
                 }
             },
-            nextPage: async function() {
+            nextPage: function () {
                 this.$data.page++;
                 this.fetchRandomGames();
             },
-            previousPage: async function() {
+            previousPage: function () {
                 this.$data.page--;
                 this.fetchRandomGames();
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>
