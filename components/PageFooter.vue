@@ -2,7 +2,7 @@
     <footer>
         <p v-html="$t('footer.disclaimer')"></p>
 
-        <LinkButton :to="{name: 'Legal'}">{{ $t('footer.legalLink') }}</LinkButton>
+        <LinkButton :to="{name: 'legal'}">{{ $t('footer.legalLink') }}</LinkButton>
         <ExternalLinkButton href="https://api.mygarage.games">{{ $t('footer.apiLink') }}</ExternalLinkButton>
 
         <br /><br />
@@ -19,7 +19,7 @@
             LinkButton,
             ExternalLinkButton
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>

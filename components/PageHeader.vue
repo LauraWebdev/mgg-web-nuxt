@@ -2,31 +2,31 @@
     <header :class="isNaviOpen ? 'navi-open' : ''">
         <div class="hamburger-item" @click="toggleNavigation()"><span class="mdi mdi-menu"></span></div>
 
-        <NuxtLink :to="{path: '/discovery'}">
+        <NuxtLink :to="localePath({name: 'discovery'})">
             <img src="@/assets/img/logoLight.svg" v-if="$store.state.uiMode == 'light'" class="logo" />
             <img src="@/assets/img/logoDark.svg" v-if="$store.state.uiMode == 'dark'" class="logo" />
         </NuxtLink>
 
         <nav>
-            <NuxtLink :to="{path: '/discovery'}" class="item">{{ $t('header.nav.discover') }}</NuxtLink>
-            <NuxtLink :to="{path: '/channel'}" class="item">{{ $t('header.nav.channels') }}</NuxtLink>
-            <NuxtLink :to="{path: '/search'}" class="item">{{ $t('header.nav.find') }}</NuxtLink>
-            <NuxtLink :to="{path: '/talk'}" class="item">{{ $t('header.nav.talk') }}</NuxtLink>
+            <NuxtLink :to="{name: 'discovery'}" class="item">{{ $t('header.nav.discover') }}</NuxtLink>
+            <NuxtLink :to="{name: 'channel'}" class="item">{{ $t('header.nav.channels') }}</NuxtLink>
+            <NuxtLink :to="{name: 'search-q'}" class="item">{{ $t('header.nav.find') }}</NuxtLink>
+            <NuxtLink :to="{name: 'talk'}" class="item">{{ $t('header.nav.talk') }}</NuxtLink>
         </nav>
 
         <div class="actions" v-if="$store.state.userToken !== null && $store.state.userToken !== undefined">
             <AvatarItem v-bind="$store.state.userData"></AvatarItem>
-            <IconItem v-bind:route="{path: '/game/add'}" v-bind:icon="'plus'"></IconItem>
-            <IconItem v-bind:route="{name: 'PlaylistDetail', params: {id: $store.state.userData.playlists[0].id}}" v-bind:icon="'bookmark-outline'"></IconItem>
-            <IconItem v-bind:route="{name: 'UserEdit', params: { id: $store.state.userData.id }}" v-bind:icon="'cog-outline'"></IconItem>
-            <IconItem v-bind:route="{name: 'ModerationIndex'}" v-bind:icon="'security'" v-if="['moderator', 'admin'].some(str => $store.state.userRoles.includes(str))"></IconItem>
+            <IconItem :route="{path: '/game/add'}" :icon="'plus'"></IconItem>
+            <IconItem :route="{name: 'PlaylistDetail', params: {id: $store.state.userData.playlists[0].id}}" :icon="'bookmark-outline'"></IconItem>
+            <IconItem :route="{name: 'UserEdit', params: { id: $store.state.userData.id }}" :icon="'cog-outline'"></IconItem>
+            <IconItem :route="{name: 'ModerationIndex'}" :icon="'security'" v-if="['moderator', 'admin'].some(str => $store.state.userRoles.includes(str))"></IconItem>
             <ThemeItem></ThemeItem>
-            <IconItem v-bind:route="{name: 'Logout'}" v-bind:icon="'logout-variant'"></IconItem>
+            <IconItem :route="{name: 'Logout'}" :icon="'logout-variant'"></IconItem>
         </div>
         <div class="actions actions-unauthorized" v-if="$store.state.userToken === null || $store.state.userToken === undefined">
             <ThemeItem></ThemeItem>
-            <LinkButton to="/auth/register" filled>{{ $t('header.actions.join') }}</LinkButton>
-            <LinkButton to="/auth/login" class="button">{{ $t('header.actions.login') }}</LinkButton>
+            <LinkButton :to="{name: 'auth-register'}" filled>{{ $t('header.actions.join') }}</LinkButton>
+            <LinkButton :to="{name: 'auth-login'}" class="button">{{ $t('header.actions.login') }}</LinkButton>
         </div>
     </header>
 </template>
@@ -48,6 +48,11 @@
         data: function () {
             return {
                 isNaviOpen: false
+            };
+        },
+        watch: {
+            '$route' () {
+                this.$data.isNaviOpen = false;
             }
         },
         methods: {
@@ -55,12 +60,7 @@
                 this.$data.isNaviOpen = !this.$data.isNaviOpen;
             }
         },
-        watch: {
-            '$route' () {
-                this.$data.isNaviOpen = false;
-            }
-        }
-    }
+    };
 </script>
 
 <style lang="less">
