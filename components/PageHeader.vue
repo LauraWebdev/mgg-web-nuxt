@@ -50,6 +50,11 @@
                 isNaviOpen: false
             };
         },
+        computed: {
+            getUIMode () {
+                return this.$store.state.uiMode;
+            }
+        },
         watch: {
             '$route' () {
                 this.$data.isNaviOpen = false;
@@ -58,11 +63,6 @@
         methods: {
             toggleNavigation: function () {
                 this.$data.isNaviOpen = !this.$data.isNaviOpen;
-            }
-        },
-        computed: {
-            getUIMode () {
-                return this.$store.state.uiMode;
             }
         }
     };

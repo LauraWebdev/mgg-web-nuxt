@@ -58,7 +58,7 @@
                 this.fetchPopularGames();
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>

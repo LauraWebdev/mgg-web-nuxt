@@ -49,7 +49,7 @@
             return {
                 apiRef: null,
                 channels: [],
-            }
+            };
         },
     };
 </script>
