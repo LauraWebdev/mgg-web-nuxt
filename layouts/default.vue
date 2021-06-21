@@ -22,7 +22,7 @@
             PageFooter,
             Snackbar
         }
-    }
+    };
 </script>
 
 <style lang="less">
@@ -194,11 +194,11 @@
             text-decoration: none;
             transition: 0.2s ease-in-out color, 0.2s ease-in-out background;
 
-            &:not(.active):not(.router-link-exact-active):hover {
+            &:not(.active):not(.nuxt-link-exact-active):hover {
                 background: #25baff44;
                 cursor: pointer;
             }
-            &.active, &.router-link-exact-active {
+            &.active, &.nuxt-link-exact-active {
                 background: #1EA0DE;
                 color: #fff;
                 cursor: default;
