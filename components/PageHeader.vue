@@ -1,22 +1,22 @@
 <template>
     <header :class="isNaviOpen ? 'navi-open' : ''">
-        <div class="hamburger-item" v-on:click="toggleNavigation()"><span class="mdi mdi-menu"></span></div>
+        <div class="hamburger-item" @click="toggleNavigation()"><span class="mdi mdi-menu"></span></div>
 
-        <router-link :to="{name: 'DiscoveryIndex'}">
+        <NuxtLink :to="{path: '/discovery'}">
             <img src="@/assets/img/logoLight.svg" v-if="$store.state.uiMode == 'light'" class="logo" />
             <img src="@/assets/img/logoDark.svg" v-if="$store.state.uiMode == 'dark'" class="logo" />
-        </router-link>
+        </NuxtLink>
 
         <nav>
-            <router-link :to="{name: 'DiscoveryIndex'}" class="item">{{ $t('header.nav.discover') }}</router-link>
-            <router-link :to="{name: 'ChannelOverview'}" class="item">{{ $t('header.nav.channels') }}</router-link>
-            <router-link :to="{name: 'Search'}" class="item">{{ $t('header.nav.find') }}</router-link>
-            <router-link :to="{name: 'Talk'}" class="item">{{ $t('header.nav.talk') }}</router-link>
+            <NuxtLink :to="{path: '/discovery'}" class="item">{{ $t('header.nav.discover') }}</NuxtLink>
+            <NuxtLink :to="{path: '/channel'}" class="item">{{ $t('header.nav.channels') }}</NuxtLink>
+            <NuxtLink :to="{path: '/search'}" class="item">{{ $t('header.nav.find') }}</NuxtLink>
+            <NuxtLink :to="{path: '/talk'}" class="item">{{ $t('header.nav.talk') }}</NuxtLink>
         </nav>
 
         <div class="actions" v-if="$store.state.userToken !== null && $store.state.userToken !== undefined">
             <AvatarItem v-bind="$store.state.userData"></AvatarItem>
-            <IconItem v-bind:route="{name: 'GameAdd'}" v-bind:icon="'plus'"></IconItem>
+            <IconItem v-bind:route="{path: '/game/add'}" v-bind:icon="'plus'"></IconItem>
             <IconItem v-bind:route="{name: 'PlaylistDetail', params: {id: $store.state.userData.playlists[0].id}}" v-bind:icon="'bookmark-outline'"></IconItem>
             <IconItem v-bind:route="{name: 'UserEdit', params: { id: $store.state.userData.id }}" v-bind:icon="'cog-outline'"></IconItem>
             <IconItem v-bind:route="{name: 'ModerationIndex'}" v-bind:icon="'security'" v-if="['moderator', 'admin'].some(str => $store.state.userRoles.includes(str))"></IconItem>
@@ -45,21 +45,21 @@
             IconItem,
             ThemeItem
         },
-        data: function() {
+        data: function () {
             return {
                 isNaviOpen: false
             }
         },
         methods: {
-            toggleNavigation: function() {
+            toggleNavigation: function () {
                 this.$data.isNaviOpen = !this.$data.isNaviOpen;
             }
         },
-        watch:{
+        watch: {
             '$route' () {
                 this.$data.isNaviOpen = false;
             }
-        } 
+        }
     }
 </script>
 
@@ -98,7 +98,7 @@
                 &:hover {
                     border-bottom-color: rgba(0,0,0,0.2);
                 }
-                &.router-link-exact-active {
+                &.nuxt-link-exact-active {
                     border-bottom-color: #25B9FF;
                 }
             }
@@ -124,7 +124,6 @@
         & header {
             background: #414141;
 
-
             & .hamburger-item {
                 color: #fff;
             }
@@ -133,7 +132,7 @@
                     &:hover {
                         border-bottom-color: rgba(255,255,255,0.2);
                     }
-                    &.router-link-exact-active {
+                    &.nuxt-link-exact-active {
                         border-bottom-color: #25B9FF;
                     }
                 }
@@ -175,7 +174,7 @@
                     & .item {
                         border-radius: 5px;
 
-                        &.router-link-exact-active {
+                        &.nuxt-link-exact-active {
                             background: #25B9FF;
                             color: #fff;
                         }
