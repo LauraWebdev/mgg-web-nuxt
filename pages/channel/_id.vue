@@ -1,6 +1,6 @@
 <template>
     <div class="page-channelOverview">
-        <div class="channel-loading" v-if="$fetchState.pending">
+        <div class="channel-loading" v-if="apiLoading || channelDetail == null">
             <LoadingCircle />
         </div>
         <div class="page-centered page-header" v-if="!apiLoading && channelDetail != null">
@@ -13,7 +13,7 @@
         <div class="page-centered page-channelList" v-if="!apiLoading && channelDetail != null">
             <div class="page-wrapper">
                 <GameList>
-                    <GameItem v-for="game in channelDetail.games" v-bind:key="game.id" v-bind="game"></GameItem>
+                    <GameItem v-for="game in channelDetail.games" :key="game.id" v-bind="game"></GameItem>
                 </GameList>
             </div>
         </div>
@@ -42,7 +42,7 @@
                 apiRef: null,
                 apiLoading: false,
                 channelDetail: null,
-            }
+            };
         },
         created: function () {
             this.$data.apiRef = new MGGApi();
@@ -71,7 +71,6 @@
                             });
                             break;
                         default:
-                            console.error(error);
                             this.$root.$emit('addSnackbar', {
                                 type: 'error',
                                 icon: 'gamepad-square',
@@ -85,7 +84,7 @@
                 }
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>
