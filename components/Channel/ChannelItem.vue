@@ -1,24 +1,34 @@
 <template>
-    <router-link :to="{ name: 'ChannelDetail', params: { id: id }}" class="channel-item">
+    <NuxtLink :to="{ path: `/channel/${id}`}" class="channel-item">
         <div class="title">#{{ title }}</div>
         <div class="games">
-            <span>{{ gamesCount }}</span><span class="mdi mdi-google-controller"></span>
+            <span>{{ gamesCount }}</span><span class="mdi mdi-google-controller" />
         </div>
-        <div class="description">
-            {{ description }}
-        </div>
-    </router-link>
+        <div class="description">{{ description }}</div>
+    </NuxtLink>
 </template>
 
 <script>
     export default {
         name: 'ChannelItem',
-        props: [
-            'id',
-            'title',
-            'description',
-            'gamesCount'
-        ]
+        props: {
+            id: {
+                type: Number,
+                default: 0
+            },
+            title: {
+                type: String,
+                default: ''
+            },
+            description: {
+                type: String,
+                default: ''
+            },
+            gamesCount: {
+                type: Number,
+                default: 0
+            }
+        }
     }
 </script>
 
