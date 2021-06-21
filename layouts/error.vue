@@ -10,12 +10,10 @@
 <script>
     export default {
         name: 'PageNotFound',
-        metaInfo: {
+        meta: {
             title: 'Page not found',
         },
-        components: {
-        }
-    }
+    };
 </script>
 
 <style lang="less" scoped>
