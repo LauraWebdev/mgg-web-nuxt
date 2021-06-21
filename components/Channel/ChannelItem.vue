@@ -1,5 +1,5 @@
 <template>
-    <NuxtLink :to="{ path: `/channel/${id}`}" class="channel-item">
+    <NuxtLink :to="{ name: 'channel-id', params: { id: id }}" class="channel-item">
         <div class="title">#{{ title }}</div>
         <div class="games">
             <span>{{ gamesCount }}</span><span class="mdi mdi-google-controller" />
@@ -29,7 +29,7 @@
                 default: 0
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>
