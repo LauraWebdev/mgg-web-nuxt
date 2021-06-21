@@ -1,7 +1,13 @@
 <template>
-  <div>
-    <Nuxt />
-  </div>
+    <div :class="`app theme-${$store.state.uiMode}`">
+        <PageHeader />
+
+        <Nuxt />
+
+        <PageFooter />
+
+        <Snackbar />
+    </div>
 </template>
 
 <script>
