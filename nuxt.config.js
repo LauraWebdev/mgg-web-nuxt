@@ -47,10 +47,11 @@ export default {
 
     i18n: {
         detectBrowserLanguage: {
-            useCookie: true,
-            cookieKey: 'mgg-lang',
-            onlyOnRoot: true
+            alwaysRedirect: true,
+            onlyOnRoot: true,
         },
+        strategy: 'no_prefix',
+        lazy:true,
         locales: [{
             code: 'en',
             iso: 'en-US',
@@ -67,7 +68,10 @@ export default {
             code: 'nl',
             iso: 'nl-NL',
             file: 'nl-NL.js',
-        }]
+        }],
+        loadLanguagesAsync: true,
+        langDir: 'lang/',
+        defaultLocale: 'en',
     },
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -79,5 +83,6 @@ export default {
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
+        friendlyErrors: false,
     }
 }
