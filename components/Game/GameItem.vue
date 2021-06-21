@@ -1,13 +1,13 @@
 <template>
-    <router-link :to="{ name: 'GameDetail', params: { id: id }}" class="game-item">
+    <router-link :to="{ name: 'game-id', params: { id: id }}" class="game-item">
         <div class="cover" :style="`background-image: url('${ coverFileName }')`">
-            <div class="cover-actions" v-if="$store.state.userToken && this.$props.mode != 'delete'">
-                <div class="action action-withhover" v-on:click="addToPlaylist" v-if="!apiLoading && !apiSuccessful"><span class="mdi mdi-bookmark-plus-outline"></span></div>
+            <div class="cover-actions" v-if="$store.state.userToken && $props.mode != 'delete'">
+                <div class="action action-withhover" @click="addToPlaylist" v-if="!apiLoading && !apiSuccessful"><span class="mdi mdi-bookmark-plus-outline"></span></div>
                 <div class="action loading" v-if="apiLoading"><span class="mdi mdi-loading"></span></div>
                 <div class="action action-red" v-if="!apiLoading && apiSuccessful"><span class="mdi mdi-bookmark-plus"></span></div>
             </div>
-            <div class="cover-actions" v-if="$store.state.userToken && this.$props.mode == 'delete'">
-                <div class="action action-withhover action-red" v-on:click="deleteFromPlaylist" v-if="!apiLoading && !apiSuccessful"><span class="mdi mdi-bookmark-minus"></span></div>
+            <div class="cover-actions" v-if="$store.state.userToken && $props.mode == 'delete'">
+                <div class="action action-withhover action-red" @click="deleteFromPlaylist" v-if="!apiLoading && !apiSuccessful"><span class="mdi mdi-bookmark-minus"></span></div>
                 <div class="action loading" v-if="apiLoading"><span class="mdi mdi-loading"></span></div>
                 <div class="action" v-if="!apiLoading && apiSuccessful"><span class="mdi mdi-bookmark-plus-outline"></span></div>
             </div>
@@ -21,29 +21,44 @@
 </template>
 
 <script>
-    import MGGApi from '../../modules/api';
+    import MGGApi from '@/modules/api';
 
     export default {
         name: 'GameItem',
-        props: [
-            'id',
-            'title',
-            'coverFileName',
-            'user',
-            'mode'
-        ],
-        data: function() {
+        props: {
+            id: {
+                type: Number,
+                default: 0
+            },
+            title: {
+                type: String,
+                default: ''
+            },
+            coverFileName: {
+                type: String,
+                default: ''
+            },
+            user: {
+                type: Object,
+                default: null
+            },
+            mode: {
+                type: String,
+                default: ''
+            }
+        },
+        data: function () {
             return {
                 apiRef: null,
                 apiLoading: false,
                 apiSuccessful: false,
-            }
+            };
         },
-        created: function() {
+        created: function () {
             this.$data.apiRef = new MGGApi();
         },
         methods: {
-            addToPlaylist: async function(event) {
+            addToPlaylist: async function (event) {
                 event.preventDefault();
 
                 this.$data.apiLoading = true;
@@ -56,38 +71,37 @@
                     this.$data.apiSuccessful = true;
 
                     this.$root.$emit('addSnackbar', {
-                        type: "success",
-                        icon: "bookmark-plus",
-                        text: this.$t('game.snackbar.success.addToPlaylist', {gameTitle: this.$props.title}),
+                        type: 'success',
+                        icon: 'bookmark-plus',
+                        text: this.$t('game.snackbar.success.addToPlaylist', { gameTitle: this.$props.title }),
                         stay: false,
                     });
-                } catch(error) {
-                    switch(error.name) {
-                        default:
-                            console.error(error);
+                } catch (error) {
+                    switch (error.name) {
+                        case 'PlaylistGameConflictException':
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "bookmark-plus",
+                                type: 'success',
+                                icon: 'bookmark-plus',
+                                text: this.$t('game.snackbar.success.addToPlaylist', { gameTitle: this.$props.title }),
+                                stay: false,
+                            });
+                            this.$data.apiSuccessful = true;
+                            break;
+                        default:
+                            this.$root.$emit('addSnackbar', {
+                                type: 'error',
+                                icon: 'bookmark-plus',
                                 text: this.$t('game.snackbar.error.addToPlaylistServerError'),
                                 stay: true,
                             });
                             this.$data.apiSuccessful = false;
-                            break;
-                        case "PlaylistGameConflictException":
-                            this.$root.$emit('addSnackbar', {
-                                type: "success",
-                                icon: "bookmark-plus",
-                                text: this.$t('game.snackbar.success.addToPlaylist', {gameTitle: this.$props.title}),
-                                stay: false,
-                            });
-                            this.$data.apiSuccessful = true;
                             break;
                     }
 
                     this.$data.apiLoading = false;
                 }
             },
-            deleteFromPlaylist: async function(event) {
+            deleteFromPlaylist: async function (event) {
                 event.preventDefault();
 
                 this.$data.apiLoading = true;
@@ -100,16 +114,15 @@
                     this.$data.apiSuccessful = true;
 
                     this.$root.$emit('addSnackbar', {
-                        type: "success",
-                        icon: "bookmark-minus",
-                        text: this.$t('game.snackbar.success.deleteFromPlaylist', {gameTitle: this.$props.title}),
+                        type: 'success',
+                        icon: 'bookmark-minus',
+                        text: this.$t('game.snackbar.success.deleteFromPlaylist', { gameTitle: this.$props.title }),
                         stay: false,
                     });
-                } catch(error) {
-                    console.error(error);
+                } catch (error) {
                     this.$root.$emit('addSnackbar', {
-                        type: "error",
-                        icon: "bookmark-minus",
+                        type: 'error',
+                        icon: 'bookmark-minus',
                         text: this.$t('game.snackbar.error.deleteFromPlaylistServerError'),
                         stay: false,
                     });
@@ -119,7 +132,7 @@
                 }
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>
