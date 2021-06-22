@@ -1,10 +1,10 @@
 <template>
     <div class="comment-item">
-        <router-link :to="{ name: 'UserDetail', params: { id: user.id }}" class="user">
+        <NuxtLink :to="{ name: 'user-id', params: { id: user.id }}" class="user">
             <div class="avatar" :style="`background-image: url('${ user.avatarFileName }')`"></div>
             <div class="username">{{ user.username }}</div>
             <div class="date">{{ createdFormatted }}</div>
-        </router-link>
+        </NuxtLink>
         <div class="text">
             {{ text }}
         </div>
@@ -17,26 +17,38 @@
 <script>
     export default {
         name: 'ChannelItem',
-        props: [
-            'id',
-            'user',
-            'text',
-            'createdAt'
-        ],
-        data: function() {
-            return {
-                createdFormatted: "",
+        props: {
+            id: {
+                type: Number,
+                default: 0
+            },
+            user: {
+                type: Object,
+                default: null
+            },
+            text: {
+                type: String,
+                default: ''
+            },
+            createdAt: {
+                type: String,
+                default: null
             }
         },
-        mounted: function() {
-            this.$data.createdFormatted = new Date(Date.parse(this.$props.createdAt)).toLocaleDateString("en-US");
+        data: function () {
+            return {
+                createdFormatted: '',
+            };
+        },
+        mounted: function () {
+            this.$data.createdFormatted = new Date(Date.parse(this.$props.createdAt)).toLocaleDateString('en-US');
         },
         methods: {
-            deleteComment: function() {
+            deleteComment: function () {
                 this.$root.$emit('deleteComment', this.$props.id);
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>
@@ -48,7 +60,7 @@
         padding: 15px;
         border-radius: 5px;
         background: rgba(0,0,0,0.07);
-        
+
         & .user {
             display: grid;
             grid-template-columns: auto auto 1fr;
