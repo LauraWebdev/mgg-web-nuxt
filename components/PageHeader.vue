@@ -16,12 +16,12 @@
 
         <div class="actions" v-if="$store.state.userToken !== null && $store.state.userToken !== undefined">
             <AvatarItem v-bind="$store.state.userData"></AvatarItem>
-            <IconItem :route="{path: '/game/add'}" :icon="'plus'"></IconItem>
-            <IconItem :route="{name: 'PlaylistDetail', params: {id: $store.state.userData.playlists[0].id}}" :icon="'bookmark-outline'"></IconItem>
-            <IconItem :route="{name: 'UserEdit', params: { id: $store.state.userData.id }}" :icon="'cog-outline'"></IconItem>
-            <IconItem :route="{name: 'ModerationIndex'}" :icon="'security'" v-if="['moderator', 'admin'].some(str => $store.state.userRoles.includes(str))"></IconItem>
+            <IconItem :route="{name: 'game-add'}" :icon="'plus'"></IconItem>
+            <IconItem :route="{name: 'playlist-id', params: {id: $store.state.userData.playlists[0].id}}" :icon="'bookmark-outline'"></IconItem>
+            <IconItem :route="{name: 'user-edit-id', params: { id: $store.state.userData.id }}" :icon="'cog-outline'"></IconItem>
+            <IconItem :route="{name: 'moderation-index'}" :icon="'security'" v-if="['moderator', 'admin'].some(str => $store.state.userRoles.includes(str))"></IconItem>
             <ThemeItem></ThemeItem>
-            <IconItem :route="{name: 'Logout'}" :icon="'logout-variant'"></IconItem>
+            <IconItem :route="{name: 'auth-logout'}" :icon="'logout-variant'"></IconItem>
         </div>
         <div class="actions actions-unauthorized" v-if="$store.state.userToken === null || $store.state.userToken === undefined">
             <ThemeItem></ThemeItem>
