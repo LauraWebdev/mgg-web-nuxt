@@ -1,14 +1,27 @@
 <template>
-    <router-link :to="{name: 'UserDetail', params: {id: id}}" class="avatar-item">
+    <NuxtLink :to="{name: 'user-id', params: {id: id}}" class="avatar-item">
         <div class="avatar" :style="`background-image: url('${avatarFileName}');`"></div>
-    </router-link>
+    </NuxtLink>
 </template>
 
 <script>
     export default {
         name: 'HeaderAvatarItem',
-        props: ['id', 'avatarFileName', 'username'],
-    }
+        props: {
+            id: {
+                type: Number,
+                default: 0
+            },
+            avatarFileName: {
+                type: String,
+                default: ''
+            },
+            username: {
+                type: String,
+                default: ''
+            }
+        },
+    };
 </script>
 
 <style lang="less" scoped>
@@ -19,7 +32,7 @@
         border: 3px solid transparent;
         display: block;
         margin-right: 5px;
-        
+
         & .avatar {
             background-color: rgba(0,0,0,0.07);
             background-size: cover;
