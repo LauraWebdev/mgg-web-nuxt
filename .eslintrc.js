@@ -22,6 +22,7 @@ module.exports = {
         "vue/singleline-html-element-content-newline": "off",
         "vue/mustache-interpolation-spacing": "off",
         "vue/no-v-html": "off",
+        "import/order": "off",
         "indent": "off",
         "semi": [1, "always"],
         "no-extra-semi": "off",
