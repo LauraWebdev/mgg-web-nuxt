@@ -7,7 +7,7 @@
 <script>
     export default {
         name: 'CommentList',
-    }
+    };
 </script>
 
 <style lang="less" scoped>
