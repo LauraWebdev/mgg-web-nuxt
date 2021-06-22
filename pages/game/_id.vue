@@ -4,7 +4,7 @@
             <LoadingCircle />
         </div>
         <div class="game-detail" v-if="!apiLoading && gameDetail != null">
-            <div class="game-header" :style="`background-image: url('${gameDetail.coverFileName}')`" v-on:click="openTrailer()" v-if="gameDetail.youtubeID != '' && gameDetail.youtubeID != null">
+            <div class="game-header" :style="`background-image: url('${gameDetail.coverFileName}')`" @click="openTrailer()" v-if="gameDetail.youtubeID != '' && gameDetail.youtubeID != null">
                 <div class="header-shade">
                     <span class="mdi mdi-play-circle-outline"></span>
                 </div>
@@ -14,15 +14,15 @@
                 <div class="page-wrapper page-thirdssplit">
                     <div class="game-meta">
                         <h1>{{ gameDetail.title }}</h1>
-                        <router-link :to="{ name: 'UserDetail', params: { id: gameDetail.user.id } }" class="user">
+                        <NuxtLink :to="{ name: 'user-id', params: { id: gameDetail.user.id } }" class="user">
                             <div class="avatar" :style="`background-image: url('${ gameDetail.user.avatarFileName }')`"></div>
                             <div class="username">{{ gameDetail.user.username }}</div>
-                        </router-link>
+                        </NuxtLink>
                         <div class="gameID">
                             <div class="ingameID">{{ gameDetail.ingameID }}</div>
-                            <div class="addToPlaylist" v-on:click="addToPlaylist" v-if="$store.state.userData != null && !isInPlaylist && !playlistActionLoading"><span class="mdi mdi-bookmark-plus-outline"></span></div>
+                            <div class="addToPlaylist" @click="addToPlaylist" v-if="$store.state.userData != null && !isInPlaylist && !playlistActionLoading"><span class="mdi mdi-bookmark-plus-outline"></span></div>
                             <div class="addToPlaylist loading" v-if="$store.state.userData != null && playlistActionLoading"><span class="mdi mdi-loading"></span></div>
-                            <div class="addToPlaylist" v-on:click="deleteFromPlaylist" v-if="$store.state.userData != null && isInPlaylist && !playlistActionLoading"><span class="mdi mdi-bookmark-minus"></span></div>
+                            <div class="addToPlaylist" @click="deleteFromPlaylist" v-if="$store.state.userData != null && isInPlaylist && !playlistActionLoading"><span class="mdi mdi-bookmark-minus"></span></div>
                         </div>
                         <div class="description" v-if="gameDetail.description != ''">
                             <nl2br tag="span" :text="gameDetail.description" />
@@ -38,12 +38,12 @@
                             </div>
                         </div>
                         <div class="channels" v-if="gameDetail.channels.length > 0">
-                            <router-link :to="{ name: 'ChannelDetail', params: { id: channel.id } }" class="item" v-for="channel in gameDetail.channels" v-bind:key="channel.id">{{ channel.title }}</router-link>
+                            <NuxtLink :to="{ name: 'channel-id', params: { id: channel.id } }" class="item" v-for="channel in gameDetail.channels" :key="channel.id">{{ channel.title }}</NuxtLink>
                         </div>
 
                         <div class="actions" v-if="$store.state.userData != null ? gameDetail.user.id == $store.state.userData.id || ['moderator', 'admin'].some(str => $store.state.userRoles.includes(str)) : false">
-                            <LinkButton :to="{ name: 'GameEdit', params: { id: gameDetail.id } }" filled>{{ $t('gameDetail.action.edit') }}</LinkButton>
-                            <LinkButton :to="{ name: 'GameDelete', params: { id: gameDetail.id } }">{{ $t('gameDetail.action.delete') }}</LinkButton>
+                            <LinkButton :to="{ name: 'game-edit-id', params: { id: gameDetail.id } }" filled>{{ $t('gameDetail.action.edit') }}</LinkButton>
+                            <LinkButton :to="{ name: 'game-delete-id', params: { id: gameDetail.id } }">{{ $t('gameDetail.action.delete') }}</LinkButton>
                         </div>
                     </div>
                     <div class="game-screenshots">
@@ -52,23 +52,23 @@
                             :style="`background-image: url('${gameDetail.coverFileName}');`"></div>
                         <div class="screenshot"
                             v-for="(screenshot, index) in gameDetail.screenshots"
-                            v-bind:key="screenshot.id"
+                            :key="screenshot.id"
                             :class="activeScreenshot == index + 1 ? 'active' : ''"
                             :style="`background-image: url('${screenshot.fileName}');`"></div>
 
                         <div class="position-shade">
                             <div class="dot"
                                 :class="activeScreenshot == 0 ? 'active' : ''"
-                                v-on:click="changeActiveScreenshot(0)"></div>
+                                @click="changeActiveScreenshot(0)"></div>
                             <div class="dot"
                                 v-for="(screenshot, index) in gameDetail.screenshots"
                                 v-bind:key="screenshot.id"
                                 :class="activeScreenshot == index + 1 ? 'active' : ''"
-                                v-on:click="changeActiveScreenshot(index + 1)"></div>
+                                @click="changeActiveScreenshot(index + 1)"></div>
                         </div>
 
-                        <div class="navigate-previous" v-on:click="previousScreenshot()"><span class="mdi mdi-arrow-left"></span></div>
-                        <div class="navigate-next" v-on:click="nextScreenshot()"><span class="mdi mdi-arrow-right"></span></div>
+                        <div class="navigate-previous" @click="previousScreenshot()"><span class="mdi mdi-arrow-left"></span></div>
+                        <div class="navigate-next" @click="nextScreenshot()"><span class="mdi mdi-arrow-right"></span></div>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                     <div class="comment-form comment-text" v-if="$store.state.userData == null" v-html="$t('gameDetail.comments.form.notLoggedIn')"></div>
                     <div class="comment-form" v-if="!newCommentActionLoading && $store.state.userData != null">
                         <textarea v-model="newCommentText" class="input"></textarea>
-                        <button class="button button-filled" v-on:click="addComment()">{{ $t('gameDetail.comments.form.commentButton') }}</button>
+                        <button class="button button-filled" @click="addComment()">{{ $t('gameDetail.comments.form.commentButton') }}</button>
                     </div>
                     <div class="comment-form comment-loading" v-if="newCommentActionLoading && $store.state.userData != null">
                         <LoadingCircle />
@@ -87,7 +87,7 @@
                         {{ $t('gameDetail.comments.noComments') }}
                     </div>
                     <CommentList v-if="gameDetail.comments.length > 0">
-                        <Comment v-for="comment in gameDetail.comments" v-bind="comment" v-bind:key="comment.id" />
+                        <Comment v-for="comment in gameDetail.comments" v-bind="comment" :key="comment.id" />
                     </CommentList>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                     </div>
                 </div>
 
-                <div v-on:click="closeTrailer()" class="close-button">{{ $t('gameDetail.trailerOverlay.closeButton') }}</div>
+                <div @click="closeTrailer()" class="close-button">{{ $t('gameDetail.trailerOverlay.closeButton') }}</div>
             </div>
         </div>
     </div>
@@ -115,23 +115,8 @@
 
     export default {
         name: 'GameDetail',
-        metaInfo: {
+        meta: {
             title: 'Game detail',
-        },
-        data: function() {
-            return {
-                apiRef: null,
-                apiLoading: true,
-                trailerOverlayOpen: false,
-                gameDetail: null,
-                createdFormatted: "",
-                updatedFormatted: "",
-                activeScreenshot: 0,
-                isInPlaylist: false,
-                playlistActionLoading: false,
-                newCommentText: "",
-                newCommentActionLoading: false,
-            }
         },
         components: {
             LoadingCircle,
@@ -139,10 +124,25 @@
             CommentList,
             Comment
         },
-        created: function() {
+        data: function () {
+            return {
+                apiRef: null,
+                apiLoading: true,
+                trailerOverlayOpen: false,
+                gameDetail: null,
+                createdFormatted: '',
+                updatedFormatted: '',
+                activeScreenshot: 0,
+                isInPlaylist: false,
+                playlistActionLoading: false,
+                newCommentText: '',
+                newCommentActionLoading: false,
+            };
+        },
+        created: function () {
             this.$data.apiRef = new MGGApi();
         },
-        mounted: function() {
+        mounted: function () {
             this.loadGame();
 
             this.$root.$on('deleteComment', (commentID) => {
@@ -150,43 +150,42 @@
             });
         },
         methods: {
-            loadGame: async function() {
+            loadGame: async function () {
                 this.$data.apiLoading = true;
 
                 try {
-                    let gameResponse = await this.$data.apiRef.getGameDetail(this.$router.currentRoute.params.id, this.$store.state.userToken);
+                    const gameResponse = await this.$data.apiRef.getGameDetail(this.$router.currentRoute.params.id, this.$store.state.userToken);
                     this.$data.gameDetail = gameResponse.game;
                     this.$data.isInPlaylist = gameResponse.isInPlaylist;
                     this.$data.apiLoading = false;
 
                     document.title = `${this.$data.gameDetail.title} by ${this.$data.gameDetail.user.username} ~ MyGarage.games`;
 
-                    this.$data.createdFormatted = new Date(Date.parse(this.$data.gameDetail.createdAt)).toLocaleDateString("en-US");
-                    this.$data.updatedFormatted = new Date(Date.parse(this.$data.gameDetail.updatedAt)).toLocaleDateString("en-US");
-                } catch(error) {
-                    switch(error.name) {
-                        default:
-                            console.error(error);
+                    this.$data.createdFormatted = new Date(Date.parse(this.$data.gameDetail.createdAt)).toLocaleDateString('en-US');
+                    this.$data.updatedFormatted = new Date(Date.parse(this.$data.gameDetail.updatedAt)).toLocaleDateString('en-US');
+                } catch (error) {
+                    switch (error.name) {
+                        case 'GameNotFoundException':
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "gamepad-square",
-                                text: this.$t('gameDetail.snackbar.error.serverError'),
-                                stay: true,
-                            });
-                            break;
-                        case "GameNotFoundException":
-                            this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "gamepad-square",
+                                type: 'error',
+                                icon: 'gamepad-square',
                                 text: this.$t('gameDetail.snackbar.error.notFound'),
                                 stay: true,
                             });
                             break;
-                        case "GamePrivateException":
+                        case 'GamePrivateException':
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "gamepad-square",
+                                type: 'error',
+                                icon: 'gamepad-square',
                                 text: this.$t('gameDetail.snackbar.error.private'),
+                                stay: true,
+                            });
+                            break;
+                        default:
+                            this.$root.$emit('addSnackbar', {
+                                type: 'error',
+                                icon: 'gamepad-square',
+                                text: this.$t('gameDetail.snackbar.error.serverError'),
                                 stay: true,
                             });
                             break;
@@ -195,17 +194,16 @@
                     this.$data.apiLoading = false;
                 }
             },
-            loadComments: async function() {
+            loadComments: async function () {
                 try {
-                    let gameResponse = await this.$data.apiRef.getGameDetail(this.$router.currentRoute.params.id, this.$store.state.userToken);
+                    const gameResponse = await this.$data.apiRef.getGameDetail(this.$router.currentRoute.params.id, this.$store.state.userToken);
                     this.$data.gameDetail.comments = gameResponse.game.comments;
-                } catch(error) {
-                    switch(error.name) {
+                } catch (error) {
+                    switch (error.name) {
                         default:
-                            console.error(error);
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "comment-processing",
+                                type: 'error',
+                                icon: 'comment-processing',
                                 text: this.$t('gameDetail.snackbar.comments.error.serverError'),
                                 stay: true,
                             });
@@ -213,13 +211,13 @@
                     }
                 }
             },
-            openTrailer: function() {
+            openTrailer: function () {
                 this.$data.trailerOverlayOpen = true;
             },
-            closeTrailer: function() {
+            closeTrailer: function () {
                 this.$data.trailerOverlayOpen = false;
             },
-            addToPlaylist: async function(event) {
+            addToPlaylist: async function (event) {
                 event.preventDefault();
 
                 this.$data.playlistActionLoading = true;
@@ -231,37 +229,36 @@
                     this.$data.isInPlaylist = true;
 
                     this.$root.$emit('addSnackbar', {
-                        type: "success",
-                        icon: "bookmark-plus",
-                        text: this.$t('game.snackbar.success.addToPlaylist', {gameTitle: this.$data.gameDetail.title}),
+                        type: 'success',
+                        icon: 'bookmark-plus',
+                        text: this.$t('game.snackbar.success.addToPlaylist', { gameTitle: this.$data.gameDetail.title }),
                         stay: false,
                     });
-                } catch(error) {
-                    switch(error.name) {
-                        default:
-                            console.error(error);
+                } catch (error) {
+                    switch (error.name) {
+                        case 'PlaylistGameConflictException':
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "bookmark-plus",
-                                text: this.$t('game.snackbar.error.addToPlaylistServerError'),
-                                stay: true,
-                            });
-                            break;
-                        case "PlaylistGameConflictException":
-                            this.$root.$emit('addSnackbar', {
-                                type: "success",
-                                icon: "bookmark-plus",
-                                text: this.$t('game.snackbar.success.addToPlaylist', {gameTitle: this.$data.gameDetail.title}),
+                                type: 'success',
+                                icon: 'bookmark-plus',
+                                text: this.$t('game.snackbar.success.addToPlaylist', { gameTitle: this.$data.gameDetail.title }),
                                 stay: false,
                             });
                             this.$data.isInPlaylist = true;
+                            break;
+                        default:
+                            this.$root.$emit('addSnackbar', {
+                                type: 'error',
+                                icon: 'bookmark-plus',
+                                text: this.$t('game.snackbar.error.addToPlaylistServerError'),
+                                stay: true,
+                            });
                             break;
                     }
 
                     this.$data.playlistActionLoading = false;
                 }
             },
-            deleteFromPlaylist: async function(event) {
+            deleteFromPlaylist: async function (event) {
                 event.preventDefault();
 
                 this.$data.playlistActionLoading = true;
@@ -273,16 +270,15 @@
                     this.$data.isInPlaylist = false;
 
                     this.$root.$emit('addSnackbar', {
-                        type: "success",
-                        icon: "bookmark-minus",
-                        text: this.$t('game.snackbar.success.deleteFromPlaylist', {gameTitle: this.$data.gameDetail.title}),
+                        type: 'success',
+                        icon: 'bookmark-minus',
+                        text: this.$t('game.snackbar.success.deleteFromPlaylist', { gameTitle: this.$data.gameDetail.title }),
                         stay: false,
                     });
-                } catch(error) {
-                    console.error(error);
+                } catch (error) {
                     this.$root.$emit('addSnackbar', {
-                        type: "error",
-                        icon: "bookmark-minus",
+                        type: 'error',
+                        icon: 'bookmark-minus',
                         text: this.$t('game.snackbar.error.deleteFromPlaylistServerError'),
                         stay: false,
                     });
@@ -290,13 +286,13 @@
                     this.$data.playlistActionLoading = false;
                 }
             },
-            addComment: async function() {
+            addComment: async function () {
                 this.$data.newCommentActionLoading = true;
 
-                if(this.$data.newCommentText == "") {
+                if (this.$data.newCommentText === '') {
                     this.$root.$emit('addSnackbar', {
-                        type: "error",
-                        icon: "comment-processing",
+                        type: 'error',
+                        icon: 'comment-processing',
                         text: this.$t('gameDetail.snackbar.comments.notEmpty'),
                         stay: false,
                     });
@@ -308,23 +304,22 @@
                     await this.$data.apiRef.createGameComment(this.$data.newCommentText, this.$data.gameDetail.id, this.$store.state.userToken);
 
                     this.$root.$emit('addSnackbar', {
-                        type: "success",
-                        icon: "comment-processing",
+                        type: 'success',
+                        icon: 'comment-processing',
                         text: this.$t('gameDetail.snackbar.comments.success.posted'),
                         stay: false,
                     });
 
-                    this.$data.newCommentText = "";
+                    this.$data.newCommentText = '';
 
                     this.$data.newCommentActionLoading = false;
                     this.loadComments();
-                } catch(error) {
-                    switch(error.name) {
+                } catch (error) {
+                    switch (error.name) {
                         default:
-                            console.error(error);
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "comment-processing",
+                                type: 'error',
+                                icon: 'comment-processing',
                                 text: this.$t('gameDetail.snackbar.comments.error.postedServerError'),
                                 stay: true,
                             });
@@ -335,25 +330,24 @@
                     this.loadComments();
                 }
             },
-            deleteComment: async function(commentID) {
+            deleteComment: async function (commentID) {
                 try {
                     await this.$data.apiRef.deleteGameComment(commentID, this.$store.state.userToken);
 
                     this.$root.$emit('addSnackbar', {
-                        type: "success",
-                        icon: "comment-processing",
+                        type: 'success',
+                        icon: 'comment-processing',
                         text: this.$t('gameDetail.snackbar.comments.success.deleted'),
                         stay: false,
                     });
 
                     this.loadComments();
-                } catch(error) {
-                    switch(error.name) {
+                } catch (error) {
+                    switch (error.name) {
                         default:
-                            console.error(error);
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "comment-processing",
+                                type: 'error',
+                                icon: 'comment-processing',
                                 text: this.$t('gameDetail.snackbar.comments.error.deletedServerError'),
                                 stay: true,
                             });
@@ -363,25 +357,25 @@
                     this.loadComments();
                 }
             },
-            changeActiveScreenshot: function(screenshotIndex) {
+            changeActiveScreenshot: function (screenshotIndex) {
                 this.$data.activeScreenshot = screenshotIndex;
             },
-            previousScreenshot: function() {
-                if(this.$data.activeScreenshot > 0) {
+            previousScreenshot: function () {
+                if (this.$data.activeScreenshot > 0) {
                     this.$data.activeScreenshot--;
                 } else {
                     this.$data.activeScreenshot = this.$data.gameDetail.screenshots.length;
                 }
             },
-            nextScreenshot: function() {
-                if(this.$data.activeScreenshot < this.$data.gameDetail.screenshots.length) {
+            nextScreenshot: function () {
+                if (this.$data.activeScreenshot < this.$data.gameDetail.screenshots.length) {
                     this.$data.activeScreenshot++;
                 } else {
                     this.$data.activeScreenshot = 0;
                 }
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>
@@ -641,7 +635,7 @@
                 width: 14px;
                 height: 14px;
                 margin: 0px 5px;
-                
+
                 &.active {
                     background: #fff;
                 }
