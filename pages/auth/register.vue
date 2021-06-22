@@ -10,7 +10,7 @@
                 <input class="input" type="email" v-model="userMail" :placeholder="$t('register.form.emailPlaceholder')" />
 
                 <button v-on:click="register()" class="button button-filled">{{ $t('register.form.registerButton') }}</button>
-                
+
                 <div class="social-logins">
                     <button v-on:click="loginDiscord()" class="button">Discord</button>
                     <!-- <button v-on:click="loginDiscord()" class="button">Twitter</button>
@@ -22,54 +22,53 @@
 </template>
 
 <script>
-    import MGGApi from '../../modules/api';
+    import MGGApi from '@/modules/api';
 
     export default {
-        name: 'Register',
-        metaInfo: {
+        meta: {
             title: 'Create a new account',
         },
-        data: function() {
+        data: function () {
             return {
                 apiRef: null,
                 apiLoading: false,
-                userName: "",
-                userPass: "",
-                userPass2: "",
-                userMail: "",
-            }
+                userName: '',
+                userPass: '',
+                userPass2: '',
+                userMail: '',
+            };
         },
-        created: function() {
+        created: function () {
             this.$data.apiRef = new MGGApi();
         },
         methods: {
-            register: async function() {
-                if(this.$data.apiLoading) return;
+            register: async function () {
+                if (this.$data.apiLoading) { return; }
 
-                if(this.$data.userName == "" || this.$data.userPass == "" || this.$data.userPass2 == "" || this.$data.userMail == "") {
+                if (this.$data.userName === '' || this.$data.userPass === '' || this.$data.userPass2 === '' || this.$data.userMail === '') {
                     this.$root.$emit('addSnackbar', {
-                        type: "error",
-                        icon: "key",
+                        type: 'error',
+                        icon: 'key',
                         text: this.$t('login.snackbar.error.fillOut'),
                         stay: false,
                     });
                     return;
                 }
 
-                if(!this.$data.userMail.includes("@")) {
+                if (!this.$data.userMail.includes('@')) {
                     this.$root.$emit('addSnackbar', {
-                        type: "error",
-                        icon: "key",
+                        type: 'error',
+                        icon: 'key',
                         text: this.$t('login.snackbar.error.emailInvalid'),
                         stay: false,
                     });
                     return;
                 }
 
-                if(this.$data.userPass != this.$data.userPass2) {
+                if (this.$data.userPass !== this.$data.userPass2) {
                     this.$root.$emit('addSnackbar', {
-                        type: "error",
-                        icon: "key",
+                        type: 'error',
+                        icon: 'key',
                         text: this.$t('login.snackbar.error.passwordNotEqual'),
                         stay: false,
                     });
@@ -82,53 +81,52 @@
                     await this.$data.apiRef.authRegister(this.$data.userName, this.$data.userPass, this.$data.userMail);
 
                     this.$data.apiLoading = false;
-                    
+
                     this.$root.$emit('addSnackbar', {
-                        type: "success",
-                        icon: "key",
+                        type: 'success',
+                        icon: 'key',
                         text: this.$t('register.snackbar.success'),
                         stay: false,
                     });
-                    this.$router.push({ name: 'Login' });
-                } catch(error) {
-                    console.error(error);
+                    this.$router.push({ name: 'auth-login' });
+                } catch (error) {
                     this.$data.apiLoading = false;
 
-                    switch(error.name) {
-                        default:
+                    switch (error.name) {
+                        case 'UsernameInvalidException':
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "key",
-                                text: this.$t('login.snackbar.error.registerServerError'),
-                                stay: false,
-                            });
-                            break;
-                        case "UsernameInvalidException":
-                            this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "key",
+                                type: 'error',
+                                icon: 'key',
                                 text: this.$t('userEdit.snackbar.error.usernameForbidden'),
                                 stay: false,
                             });
                             break;
-                        case "UsernameEmailConflictException":
+                        case 'UsernameEmailConflictException':
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "key",
+                                type: 'error',
+                                icon: 'key',
                                 text: this.$t('login.snackbar.error.inUse'),
+                                stay: false,
+                            });
+                            break;
+                        default:
+                            this.$root.$emit('addSnackbar', {
+                                type: 'error',
+                                icon: 'key',
+                                text: this.$t('login.snackbar.error.registerServerError'),
                                 stay: false,
                             });
                             break;
                     }
                 }
             },
-            loginDiscord: async function() {
-                let oauthUrl = await this.$data.apiRef.oauthDiscordGetUrl();
+            loginDiscord: async function () {
+                const oauthUrl = await this.$data.apiRef.oauthDiscordGetUrl();
 
                 window.location = oauthUrl.url;
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>
