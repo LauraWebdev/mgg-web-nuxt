@@ -10,7 +10,7 @@
                 <input class="input" type="password" v-model="userPass" :placeholder="$t('login.form.passwordPlaceholder')" />
 
                 <button v-on:click="login()" class="button button-filled">{{ $t('login.form.loginButton') }}</button>
-                
+
                 <div class="social-logins">
                     <button v-on:click="loginDiscord()" class="button">Discord</button>
                     <!-- <button v-on:click="loginDiscord()" class="button">Twitter</button>
@@ -22,41 +22,41 @@
 </template>
 
 <script>
-    import MGGApi from '../../modules/api';
+    import MGGApi from '@/modules/api';
 
     export default {
         name: 'Login',
-        metaInfo: {
+        meta: {
             title: 'Login',
         },
-        data: function() {
+        data: function () {
             return {
                 apiRef: null,
                 apiLoading: false,
-                userName: "",
-                userPass: "",
+                userName: '',
+                userPass: '',
                 isBanned: false,
-            }
+            };
         },
-        created: function() {
+        created: function () {
             this.$data.apiRef = new MGGApi();
         },
         methods: {
-            login: async function() {
-                if(this.$data.apiLoading) return;
+            login: async function () {
+                if (this.$data.apiLoading) { return; }
 
                 this.$data.isBanned = false;
 
-                if(this.$data.userName == "" || this.$data.userPass == "") {
+                if (this.$data.userName === '' || this.$data.userPass === '') {
                     this.$root.$emit('addSnackbar', {
-                        type: "error",
-                        icon: "key",
+                        type: 'error',
+                        icon: 'key',
                         text: this.$t('login.snackbar.error.fillOut'),
                         stay: false,
                     });
                     return;
                 }
-                
+
                 this.$data.apiLoading = true;
 
                 try {
@@ -66,63 +66,63 @@
                     this.$data.apiLoading = false;
 
                     this.$root.$emit('addSnackbar', {
-                        type: "success",
-                        icon: "key",
-                        text: this.$t('login.snackbar.welcomeBack', {username: loginResponse.userData.username}),
+                        type: 'success',
+                        icon: 'key',
+                        text: this.$t('login.snackbar.welcomeBack', { username: loginResponse.userData.username }),
                         stay: false,
                     });
 
-                    this.$router.push({ name: 'DiscoveryIndex' });
-                } catch(error) {
+                    this.$router.push({ name: 'discovery-index' });
+                } catch (error) {
                     this.$data.apiLoading = false;
 
-                    switch(error.name) {
-                        default:
-                            this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "key",
-                                text: this.$t('login.snackbar.error.serverError'),
-                                stay: false,
-                            });
-                            break;
-                        case "UserNotFoundException":
+                    switch (error.name) {
+                        case 'UserNotFoundException':
                             // Wrong username
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "key",
+                                type: 'error',
+                                icon: 'key',
                                 text: this.$t('login.snackbar.error.userDoesntExist'),
                                 stay: false,
                             });
                             break;
-                        case "AuthenticationWrongException":
+                        case 'AuthenticationWrongException':
                             // Wrong Password
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "key",
+                                type: 'error',
+                                icon: 'key',
                                 text: this.$t('login.snackbar.error.passwordWrong'),
                                 stay: false,
                             });
                             break;
-                        case "AuthenticationBannedException":
+                        case 'AuthenticationBannedException':
                             // Banned
                             this.$data.isBanned = true;
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "key",
-                                text: this.$t('login.snackbar.error.banned', {reason: error.message}),
+                                type: 'error',
+                                icon: 'key',
+                                text: this.$t('login.snackbar.error.banned', { reason: error.message }),
                                 stay: true,
+                            });
+                            break;
+                        default:
+                            this.$root.$emit('addSnackbar', {
+                                type: 'error',
+                                icon: 'key',
+                                text: this.$t('login.snackbar.error.serverError'),
+                                stay: false,
                             });
                             break;
                     }
                 }
             },
-            loginDiscord: async function() {
-                let oauthUrl = await this.$data.apiRef.oauthDiscordGetUrl();
+            loginDiscord: async function () {
+                const oauthUrl = await this.$data.apiRef.oauthDiscordGetUrl();
 
                 window.location = oauthUrl.url;
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>
