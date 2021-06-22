@@ -54,7 +54,7 @@
                         stay: false,
                     });
 
-                    this.$router.push({ name: 'discovery-index' });
+                    this.$router.push({ name: 'discovery' });
                 } catch (error) {
                     switch (error.name) {
                         default:
@@ -71,7 +71,7 @@
                 }
             },
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>
