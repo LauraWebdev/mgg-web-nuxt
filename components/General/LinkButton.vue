@@ -1,13 +1,19 @@
 <template>
-    <router-link :to="to" class="button" :class="filled != undefined ? 'button-filled' : ''"><slot></slot></router-link>
+    <NuxtLink :to="to" class="button" :class="filled != undefined ? 'button-filled' : ''"><slot></slot></NuxtLink>
 </template>
 
 <script>
     export default {
         name: 'LinkButton',
-        props: [
-            'to',
-            'filled'
-        ]
-    }
+        props: {
+            to: {
+                type: Object,
+                default: null
+            },
+            filled: {
+                type: Boolean,
+                default: false
+            }
+        }
+    };
 </script>
