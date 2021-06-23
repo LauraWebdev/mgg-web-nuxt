@@ -67,6 +67,10 @@ export default {
             code: 'nl',
             iso: 'nl-NL',
             file: 'nl-NL.js',
+        }, {
+            code: 'kr',
+            iso: 'ko-KR',
+            file: 'ko-KR.js',
         }],
         loadLanguagesAsync: true,
         langDir: 'lang/',
