@@ -77,34 +77,33 @@
     import GameItem from '@/components/Game/GameItem';
 
     export default {
-        name: 'UserDetail',
-        metaInfo: {
+        meta: {
             title: 'User detail',
         },
-        data: function() {
+        data: function () {
             return {
                 apiRef: null,
                 apiLoading: true,
                 userDetail: null,
-                createdFormatted: "",
+                createdFormatted: '',
                 showYouTubeAsLink: false,
                 showTwitterAsLink: false,
                 showTwitterAsAtLink: false,
-            }
+            };
         },
         components: {
             LoadingCircle,
             LinkButton,
             GameItem,
         },
-        created: function() {
+        created: function () {
             this.$data.apiRef = new MGGApi();
         },
-        mounted: function() {
+        mounted: function () {
             this.loadUser();
         },
         methods: {
-            loadUser: async function() {
+            loadUser: async function () {
                 this.$data.apiLoading = true;
 
                 try {
@@ -113,35 +112,35 @@
 
                     document.title = `${this.$data.userDetail.username}'s profile ~ MyGarage.games`;
 
-                    this.$data.createdFormatted = new Date(Date.parse(this.$data.userDetail.createdAt)).toLocaleDateString("en-US");
+                    this.$data.createdFormatted = new Date(Date.parse(this.$data.userDetail.createdAt)).toLocaleDateString('en-US');
                     this.$data.showYouTubeAsLink = MGGApi.isSocialYouTubeValid(this.$data.userDetail.socialYouTube);
                     this.$data.showTwitterAsLink = MGGApi.isSocialTwitterURLValid(this.$data.userDetail.socialTwitter);
                     this.$data.showTwitterAsAtLink = MGGApi.isSocialTwitterAtValid(this.$data.userDetail.socialTwitter);
 
-                    if(this.$data.userDetail.banActive) {
+                    if (this.$data.userDetail.banActive) {
                         this.$root.$emit('addSnackbar', {
-                            type: "error",
-                            icon: "account-circle",
+                            type: 'error',
+                            icon: 'account-circle',
                             text: this.$t('userDetail.snackbar.banned'),
                             stay: true,
                         });
                         this.$data.userDetail = null;
                     }
-                } catch(error) {
-                    switch(error.name) {
-                        default:
-                            console.error(error);
+                } catch (error) {
+                    switch (error.name) {
+                        case 'UserNotFoundException':
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "account-circle",
+                                type: 'error',
+                                icon: 'account-circle',
                                 text: this.$t('userDetail.snackbar.notFound'),
                                 stay: true,
                             });
                             break;
-                        case "UserNotFoundException":
+                        default:
+                            console.error(error);
                             this.$root.$emit('addSnackbar', {
-                                type: "error",
-                                icon: "account-circle",
+                                type: 'error',
+                                icon: 'account-circle',
                                 text: this.$t('userDetail.snackbar.notFound'),
                                 stay: true,
                             });
@@ -153,9 +152,8 @@
                 }
             },
         }
-    }
+    };
 </script>
-
 
 <style lang="less" scoped>
     .user-loading {
