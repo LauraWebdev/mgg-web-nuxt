@@ -17,7 +17,7 @@
                 <div class="title">{{ $t('gameDelete.confirm.header') }}</div>
                 <div class="text" v-html="$t('gameDelete.confirm.text', {gameTitle: gameDetail.title})"></div>
                 <div class="actions">
-                    <LinkButton :to="{ name: 'GameDetail', params: { id: gameDetail.id } }" filled>{{ $t('gameDelete.confirm.nevermindButton') }}</LinkButton>
+                    <LinkButton :to="{ name: 'game-id', params: { id: gameDetail.id } }" filled>{{ $t('gameDelete.confirm.nevermindButton') }}</LinkButton>
                     <div class="button" v-on:click="confirmDeletion()">{{ $t('gameDelete.confirm.yesButton') }}</div>
                 </div>
             </div>
@@ -32,71 +32,69 @@
     import LinkButton from '@/components/General/LinkButton';
 
     export default {
-        name: 'GameDelete',
-        metaInfo: {
+        meta: {
             title: 'Deleting a game',
         },
-        data: function() {
+        data: function () {
             return {
                 apiRef: null,
                 apiLoading: true,
                 gameDetail: null,
-            }
+            };
         },
         components: {
             LoadingCircle,
             LinkButton
         },
-        created: function() {
+        created: function () {
             this.$data.apiRef = new MGGApi();
         },
-        mounted: function() {
+        mounted: function () {
             this.loadGame();
         },
         methods: {
-            loadGame: async function() {
+            loadGame: async function () {
                 this.$data.apiLoading = true;
 
                 try {
-                    let gameResponse = await this.$data.apiRef.getGameDetail(this.$router.currentRoute.params.id);
+                    const gameResponse = await this.$data.apiRef.getGameDetail(this.$router.currentRoute.params.id);
                     this.$data.gameDetail = gameResponse.game;
                     this.$data.apiLoading = false;
-                } catch(error) {
+                } catch (error) {
                     console.error(error);
                     this.$data.apiLoading = false;
                 }
             },
-            confirmDeletion: async function() {
+            confirmDeletion: async function () {
                 this.$data.apiLoading = true;
 
                 try {
                     await this.$data.apiRef.deleteGame(this.$router.currentRoute.params.id, this.$store.state.userToken);
 
                     this.$root.$emit('addSnackbar', {
-                        type: "success",
-                        icon: "trash-can-outline",
+                        type: 'success',
+                        icon: 'trash-can-outline',
                         text: this.$t('gameDelete.snackbar.success'),
                         stay: false,
                     });
 
                     this.$router.push({
-                        name: 'UserDetail',
+                        name: 'user-id',
                         params: { id: this.$store.state.userData.id }
                     });
-                } catch(error) {
-                    console.error(error);
+                } catch (error) {
                     this.$data.apiLoading = false;
 
                     this.$root.$emit('addSnackbar', {
-                        type: "error",
-                        icon: "trash-can-outline",
+                        type: 'error',
+                        icon: 'trash-can-outline',
                         text: this.$t('gameDelete.snackbar.error'),
                         stay: false,
                     });
                 }
             }
         }
-    }
+    };
 </script>
 
 <style lang="less" scoped>
