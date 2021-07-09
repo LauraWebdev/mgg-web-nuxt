@@ -1,5 +1,5 @@
 <template>
-    <div :class="`app theme-${$store.state.uiMode}`">
+    <div :class="`app theme-${uiMode} loaded-${pageLoaded}`">
         <PageHeader />
 
         <Nuxt />
@@ -21,7 +21,20 @@
             PageHeader,
             PageFooter,
             Snackbar
-        }
+        },
+        data: function () {
+            return {
+                uiMode: 'light',
+                pageLoaded: false
+            };
+        },
+        mounted: function () {
+            this.$data.uiMode = this.$store.state.uiMode;
+
+            setTimeout(() => {
+                this.$data.pageLoaded = true;
+            }, 1000);
+        },
     };
 </script>
 
@@ -48,6 +61,12 @@
         color: #222;
         display: grid;
         grid-template-rows: auto 1fr auto;
+        opacity: 0;
+        transition: 0.2s ease opacity;
+
+        &.loaded-true {
+            opacity: 1;
+        }
 
         & a {
             color: inherit;
@@ -212,6 +231,13 @@
                 }
             }
         }
+    }
+
+    .page-enter-active, .page-leave-active {
+        transition: opacity 0.1s;
+    }
+    .page-enter, .page-leave-to {
+        opacity: 0;
     }
 
     .theme-dark {
