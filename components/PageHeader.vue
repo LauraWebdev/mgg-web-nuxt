@@ -3,8 +3,10 @@
         <div class="hamburger-item" @click="toggleNavigation()"><span class="mdi mdi-menu"></span></div>
 
         <NuxtLink :to="localePath({name: 'discovery'})">
-                <img src="@/assets/img/logoLight.svg" v-if="getUIMode == 'light'" class="logo" />
-                <img src="@/assets/img/logoDark.svg" v-if="getUIMode == 'dark'" class="logo" />
+            <ClientOnly>
+                <img src="@/assets/img/logoLight.svg" v-if="$store.state.uiMode != 'dark'" class="logo" />
+                <img src="@/assets/img/logoDark.svg" v-if="$store.state.uiMode == 'dark'" class="logo" />
+            </ClientOnly>
         </NuxtLink>
 
         <nav>
@@ -49,11 +51,6 @@
             return {
                 isNaviOpen: false
             };
-        },
-        computed: {
-            getUIMode () {
-                return this.$store.state.uiMode;
-            }
         },
         watch: {
             '$route' () {
