@@ -724,45 +724,45 @@ class MGGApi {
     static isUsernameValid(unfilteredUsername) {
         // Allowed: az AZ 09 - _
         let usernameRegex = /^[\w-]{3,}$/g;
-    
+
         return usernameRegex.test(unfilteredUsername);
     }
-    
+
     static isCreatorIDValid(unfilteredCreatorID) {
         let creatorIDRegex = /^P-[a-zA-Z0-9]{3}-[a-zA-Z0-9]{3}-[a-zA-Z0-9]{3}$/g;
-    
+
         return creatorIDRegex.test(unfilteredCreatorID);
     }
-    
+
     static isGameIDValid(unfilteredGameID) {
-        let gameIDRegex = /^G-[a-zA-Z0-9]{3}-[a-zA-Z0-9]{3}-[a-zA-Z0-9]{3}$/g;
-    
+        let gameIDRegex = /^G-[0-9B-DF-HJ-NP-TV-Z]{3}-[0-9B-DF-HJ-NP-TV-Z]{3}-[0-9B-DF-HJ-NP-TV-Z]{3}$/g;
+
         return gameIDRegex.test(unfilteredGameID);
     }
 
     static isSocialDiscordValid(unfilteredDiscord) {
         let discordRegex = /^.{3,32}#[0-9]{4}$/g;
-    
+
         if(unfilteredDiscord === "") { return true; }
-    
+
         return discordRegex.test(unfilteredDiscord);
     }
-    
+
     static isSocialTwitterURLValid(unfilteredTwitter) {
         let twitterURLRegex = /^(?:https|http)\:\/\/(?:[\w]+\.)?twitter\.com\/?([\w-]{1,})$/g;
-    
+
         return twitterURLRegex.test(unfilteredTwitter);
     }
-    
+
     static isSocialTwitterAtValid(unfilteredTwitter) {
         let twitterAtRegex = /^@([\w-]{1,})$/g;
-    
+
         return twitterAtRegex.test(unfilteredTwitter);
     }
-    
+
     static isSocialYouTubeValid(unfilteredYouTube) {
         let youtubeRegex = /^(?:https|http)\:\/\/(?:[\w]+\.)?youtube\.com\/(?:c\/|channel\/|user\/)?([\w-]{1,})$/g;
-    
+
         return youtubeRegex.test(unfilteredYouTube);
     }
 }
