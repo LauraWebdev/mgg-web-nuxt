@@ -735,7 +735,7 @@ class MGGApi {
     }
 
     static isGameIDValid(unfilteredGameID) {
-        let gameIDRegex = /^G-[0-9B-DF-HJ-NP-TV-Z]{3}-[0-9B-DF-HJ-NP-TV-Z]{3}-[0-9B-DF-HJ-NP-TV-Z]{3}$/g;
+        let gameIDRegex = /^G-[0-9B-DF-HJ-NP-TV-Y]{3}-[0-9B-DF-HJ-NP-TV-Y]{3}-[0-9B-DF-HJ-NP-TV-Y]{3}$/g;
 
         return gameIDRegex.test(unfilteredGameID);
     }
