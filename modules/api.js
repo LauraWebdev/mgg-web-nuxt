@@ -811,10 +811,9 @@ class MGGApi {
     return creatorIDRegex.test(unfilteredCreatorID);
   }
 
-  static isGameIDValid(unfilteredGameID) {
-    const gameIDRegex = /^G-[0-9B-DF-HJ-NP-TV-Y]{3}-[0-9B-DF-HJ-NP-TV-Y]{3}-[0-9B-DF-HJ-NP-TV-Y]{3}$/g;
-
-    return gameIDRegex.test(unfilteredGameID);
+  static isGameIDValid(gameID) {
+    if (gameID === '') { return true; }
+    return isGameIDRegexValid(gameID) && isGameIDChecksumValid(gameID);
   }
 
   static isSocialDiscordValid(unfilteredDiscord) {
@@ -844,6 +843,42 @@ class MGGApi {
 
     return youtubeRegex.test(unfilteredYouTube);
   }
+}
+
+function isGameIDRegexValid(gameID) {
+  const gameIDRegex = /^G(-[0-9B-DF-HJ-NPRTV-Y]{3}){3}$/g;
+  return gameIDRegex.test(gameID);
+}
+
+function toBytesInt32(num) {
+  return new Uint8Array([
+      (num & 0xFF000000) >> 24,
+      (num & 0x00FF0000) >> 16,
+      (num & 0x0000FF00) >> 8,
+      (num & 0x000000FF)
+  ]);
+}
+
+function isGameIDChecksumValid(gameID) {
+  const charset = '0123456789BCDFGHJKLMNPRTVWXY';
+  const magic = 0xDEAD9ED5;
+  const accessKey = '97b08aad';
+  const keyBytes = [...accessKey].map(value => value.charCodeAt(0));
+  // get data id
+  gameID = gameID.slice(1).replace(/-/g, '');
+  const num = [...gameID].reduce(
+      (dataID, char) => dataID * 28 + charset.indexOf(char), 0
+  ) ^ magic;
+  const dataID = toBytesInt32(num);
+  // calculate checksum
+  const key = keyBytes.reduce((key, value) => {
+      key ^= value;
+      key = (key << 4) | (key >> 4);
+      key &= 0xFF;
+      return key;
+  }, 0);
+  const checksum = dataID.reduce((checksum, value) => checksum ^ value, key);
+  return checksum === 0;
 }
 
 export default MGGApi;
